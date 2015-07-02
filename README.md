@@ -9,7 +9,7 @@ pip install selenium
 
 You also have to download chrome dirver.
 
-Download from http://code.google.com/p/chromedriver/downloads/list
+Download from http://chromedriver.storage.googleapis.com/index.html?path=2.16/
 
 Copy it to /usr/bin
 
