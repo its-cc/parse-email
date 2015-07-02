@@ -3,13 +3,12 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from scrapy.http import Request
 from scrapy import signals
 from scrapy.conf import settings
 from scrapy.xlib.pydispatch import dispatcher
 from selenium import webdriver
 
-#settings.set('LOG_LEVEL', 'INFO')
+settings.set('LOG_LEVEL', 'INFO')
 
 class EmailSpider(CrawlSpider):
     name = 'email'
