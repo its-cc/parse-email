@@ -1,17 +1,15 @@
+import re,sys
 import scrapy
-from scrapy.crawler import CrawlerProcess, Crawler
+from scrapy.crawler import CrawlerProcess
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.http import Request
 from scrapy import signals
+from scrapy.conf import settings
 from scrapy.xlib.pydispatch import dispatcher
 from selenium import webdriver
-from scrapy.utils.log import configure_logging
-import logging
-import re,sys
-from scrapy.conf import settings
 
-settings.set('LOG_LEVEL', 'INFO')
+#settings.set('LOG_LEVEL', 'INFO')
 
 class EmailSpider(CrawlSpider):
     name = 'email'
@@ -42,16 +40,16 @@ class EmailSpider(CrawlSpider):
         for url in additional_pages:
 	    if url not in self.visited:
 		self.visited[url] = 1
-                yield Request(response.url+'/'+url, callback=self.parse_jssite_url)
+                yield self.parse_jssite_url(response.url+'/'+url)
 	
 	#handle static dom
 	for sel in response.css('a[href*="'+self.allowd_domains[0]+'"]::attr(href)'):
 	    self.add_to_list(sel.extract())
 	
     
-    def parse_jssite_url(self,response):
+    def parse_jssite_url(self,url):
 	#handle dynamic dom
-        self.driver.get(response.url)
+        self.driver.get(url)
         elms = self.driver.find_elements_by_partial_link_text('@jana.com')
 	for elm in elms:
 	    self.add_to_list(elm.get_attribute('href'))
