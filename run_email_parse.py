@@ -11,7 +11,7 @@ import logging
 import re,sys
 from scrapy.conf import settings
 
-#settings.set('LOG_LEVEL', 'INFO')
+settings.set('LOG_LEVEL', 'INFO')
 
 class EmailSpider(CrawlSpider):
     name = 'email'
