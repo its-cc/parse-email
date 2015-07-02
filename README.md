@@ -17,3 +17,5 @@ After cloning the project, run parser with domain and output file name.
 ```
 python run_email_parse.py jana.com result
 ```
+
+Email result will be save to the output file.
