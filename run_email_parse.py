@@ -11,21 +11,21 @@ import logging
 import re,sys
 from scrapy.conf import settings
 
-settings.set('LOG_LEVEL', 'INFO')
+#settings.set('LOG_LEVEL', 'INFO')
 
 class EmailSpider(CrawlSpider):
     name = 'email'
 
-    rules = (
-        Rule(LinkExtractor(allow=(), allow_domains=(['jana.com'])), callback='parse_start_url', follow=True),
-    )
       
     def __init__(self, **kwargs):
-        CrawlSpider.__init__(self) 
 	self.allowd_domains = [kwargs['domain']]
 	self.start_urls= ["http://www."+kwargs['domain']]
-        self.driver = webdriver.Chrome()
+        self.rules = (
+            Rule(LinkExtractor(allow=(), allow_domains=(self.allowd_domains)), callback='parse_start_url', follow=True),
+	)
+        CrawlSpider.__init__(self) 
 	self.filename = kwargs['output']
+        self.driver = webdriver.Chrome()
         dispatcher.connect(self.spider_closed, signals.spider_closed)
 	self.visited = {}
 	self.email_list = set()
@@ -33,6 +33,7 @@ class EmailSpider(CrawlSpider):
     def spider_closed(self, spider):
 	with open(self.filename,'w') as f:
 	    f.write('\n'.join(self.email_list))
+	    f.write('\n')
         self.driver.quit() 
     
     def parse_start_url(self, response):
@@ -62,6 +63,9 @@ class EmailSpider(CrawlSpider):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print "You must enter domain name and output file name "
+	exit()
     process = CrawlerProcess(settings)
     process.crawl(EmailSpider, domain=sys.argv[1], output=sys.argv[2])
     process.start()
